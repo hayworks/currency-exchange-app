@@ -1,12 +1,11 @@
 package com.searchmetrics.currencyexchange.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Data
+@Getter
 public class CurrencyRate {
 
     private BigDecimal rate;
@@ -17,7 +16,4 @@ public class CurrencyRate {
         this.createDate = new Date();
     }
 
-    public BigDecimal getRate() {
-        return rate;
-    }
 }

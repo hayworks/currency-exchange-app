@@ -4,6 +4,7 @@ import com.searchmetrics.currencyexchange.dao.CurrencyRateDao;
 import com.searchmetrics.currencyexchange.exception.CurrencyRateUnavailableException;
 import com.searchmetrics.currencyexchange.model.CurrencyRate;
 import com.searchmetrics.currencyexchange.repository.CurrentCurrencyRateRepository;
+import com.searchmetrics.currencyexchange.service.CurrencyDataService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,6 +30,9 @@ public class CurrencyRateFacadeTest {
 
     @Mock
     private CurrencyRateDao currencyRateDao;
+
+    @Mock
+    private CurrencyDataService currencyDataService;
 
     @Test
     public void should_get_current_rate_successfully() {
@@ -74,6 +78,25 @@ public class CurrencyRateFacadeTest {
         //then
         verify(currencyRateDao).getAllBetweenDates(any(Date.class), any(Date.class));
         assertNotNull(currencyRateHistoryList);
+
+    }
+
+    @Test
+    public void should_update_current_rate_successfully() {
+
+        //given
+        doNothing().when(currencyRateDao).insertNewHistoryRateItems(any(CurrencyRate.class));
+        when(currencyDataService.getLatestExchangeRate()).thenReturn(new BigDecimal(1.2));
+        doNothing().when(currentCurrencyRateRepository).updateCurrentRate(any(BigDecimal.class));
+        when(currentCurrencyRateRepository.getCurrencyRate()).thenReturn(new CurrencyRate(new BigDecimal(1.2)));
+
+        //when
+        currencyRateFacade.updateCurrentCurrencyRate();
+
+        //then
+        verify(currencyDataService).getLatestExchangeRate();
+        verify(currencyRateDao).insertNewHistoryRateItems(any(CurrencyRate.class));
+        verify(currentCurrencyRateRepository).updateCurrentRate(any(BigDecimal.class));
 
     }
 
