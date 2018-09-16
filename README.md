@@ -12,6 +12,8 @@ used techs are:
     <li><b>Lucid Chart</b> for design illustration</li>
 </ul>
  
+ Swagger link: <a href="http://localhost:8080/swagger-ui.htm">http://localhost:8080/swagger-ui.htm</a>
+ 
  the design is like this:
  
  <img src="design.png" width="80%"/>

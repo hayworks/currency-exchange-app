@@ -1,6 +1,8 @@
 package com.searchmetrics.currencyexchange.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,8 +13,10 @@ import java.util.Date;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class CurrencyRate {
 
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
