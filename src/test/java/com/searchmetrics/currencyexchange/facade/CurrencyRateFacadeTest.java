@@ -10,8 +10,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.web.client.RestClientException;
 
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -82,7 +84,7 @@ public class CurrencyRateFacadeTest {
     }
 
     @Test
-    public void should_update_current_rate_successfully() {
+    public void should_update_current_rate_successfully() throws URISyntaxException {
 
         //given
         doNothing().when(currencyRateDao).insertNewHistoryRateItems(any(CurrencyRate.class));
@@ -97,6 +99,24 @@ public class CurrencyRateFacadeTest {
         verify(currencyDataService).getLatestExchangeRate();
         verify(currencyRateDao).insertNewHistoryRateItems(any(CurrencyRate.class));
         verify(currentCurrencyRateRepository).updateCurrentRate(any(BigDecimal.class));
+
+    }
+
+    @Test
+    public void should_put_null_when_currency_service_is_unreachable() throws URISyntaxException {
+
+        //given
+        doNothing().when(currencyRateDao).insertNewHistoryRateItems(any(CurrencyRate.class));
+        when(currencyDataService.getLatestExchangeRate()).thenThrow(new RestClientException("dummy text"));
+        when(currentCurrencyRateRepository.getCurrencyRate()).thenReturn(new CurrencyRate(new BigDecimal(1.2)));
+
+        //when
+        currencyRateFacade.updateCurrentCurrencyRate();
+
+        //then
+        verify(currencyDataService).getLatestExchangeRate();
+        verify(currencyRateDao).insertNewHistoryRateItems(any(CurrencyRate.class));
+        verify(currentCurrencyRateRepository).updateCurrentRate(null);
 
     }
 

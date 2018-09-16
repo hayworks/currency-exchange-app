@@ -9,3 +9,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+
+currency:
+  service:
+    interval: 5000
+    url: http://free.currencyconverterapi.com/api/v5/convert?q=EUR_USD&compact=y
